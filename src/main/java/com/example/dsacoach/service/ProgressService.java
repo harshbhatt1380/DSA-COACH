@@ -2,13 +2,13 @@ package com.example.dsacoach.service;
 
 import org.springframework.stereotype.Service;
 
+import com.example.dsacoach.DTO.ResponseDTO.ProgressResponseDTO;
 import com.example.dsacoach.entity.Progress;
 import com.example.dsacoach.entity.Question;
 import com.example.dsacoach.entity.User;
 import com.example.dsacoach.repository.ProgressRepository;
 import com.example.dsacoach.repository.QuestionRepository;
 import com.example.dsacoach.repository.UserRepository;
-import com.example.dsacoach.resultObject.ProgressOperationResult;
 
 @Service
 public class ProgressService 
@@ -24,18 +24,18 @@ public class ProgressService
         this.progressRepository=progressRepository;
     }
 
-    public ProgressOperationResult addProgress(String username,String questionTitle,boolean solved)//Integer userId,
+    public ProgressResponseDTO addProgress(String username,String questionTitle,boolean solved)//Integer userId,
     {
         User user = userRepository.findByUsername(username);
         Question question = questionRepository.findByTitle(questionTitle);
         if(user==null)
         {
-            return new ProgressOperationResult(false,"user not found",null);
+            return new ProgressResponseDTO(false,"user not found",null);
         }
         else if(question==null)
         {
             //Assuming we have a large database of problems
-           return new ProgressOperationResult(false,"question not found",null);
+           return new ProgressResponseDTO(false,"question not found",null);
         }
         else
         {
@@ -44,19 +44,19 @@ public class ProgressService
             {
                 progress = new Progress(user, question, solved);
                 progressRepository.save(progress);
-                return new ProgressOperationResult(true,"New progress data entry created",progress); 
+                return new ProgressResponseDTO(true,"New progress data entry created",progress); 
             }
             else
             {
                 if(progress.isSolved()==solved)
                 {
-                    return new ProgressOperationResult(true,"No updates in data entry of progress stat",progress);
+                    return new ProgressResponseDTO(true,"No updates in data entry of progress stat",progress);
                 }
                 else
                 {
                     progress.setSolved(solved);
                     progressRepository.save(progress);
-                    return new ProgressOperationResult(true,"Updated data entry of already existing progress stat",progress);
+                    return new ProgressResponseDTO(true,"Updated data entry of already existing progress stat",progress);
                 }
             }
         }

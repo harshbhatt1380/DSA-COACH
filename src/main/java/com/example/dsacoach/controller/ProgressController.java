@@ -3,13 +3,15 @@ package com.example.dsacoach.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.dsacoach.entity.Progress;
 import com.example.dsacoach.service.ProgressService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.dsacoach.DTO.RequestDTO.ProgressRequestDTO;
+import com.example.dsacoach.DTO.ResponseDTO.ProgressResponseDTO;
+
 
 
 
@@ -25,8 +27,16 @@ public class ProgressController
     }
 
     @PostMapping("/add")
-    public  ResponseEntity<Progress> addProgress(@RequestParam String username,@RequestParam String questionTitle,@RequestParam boolean solved) 
+    public  ResponseEntity<ProgressResponseDTO> addProgress(@RequestBody ProgressRequestDTO progress) 
     {   
-        return progressService.addProgress(username, questionTitle,solved);
+        ProgressResponseDTO result=progressService.addProgress(progress.getUsername(),progress.getQuestionTitle(),progress.isSolved());
+        if(result.getSuccess())
+        {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        else
+        {
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
     }
 }

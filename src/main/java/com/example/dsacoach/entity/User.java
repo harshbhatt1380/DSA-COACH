@@ -47,11 +47,6 @@ public class User
         return email;
     }
 
-    /*public int getTuptup()
-    {
-        return tuptup;
-    }*/
-
     public void setUsername(String username)
     {
         this.username=username;
@@ -61,10 +56,4 @@ public class User
     {
         this.email=email;
     }
-
-    /*public void setTuptup(int tp)
-    {
-        this.tuptup=tp;
-    }*/
-
 }

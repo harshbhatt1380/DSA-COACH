@@ -1,14 +1,14 @@
-package com.example.dsacoach.resultObject;
+package com.example.dsacoach.DTO.ResponseDTO;
 
 import com.example.dsacoach.entity.Progress;
 
-public class ProgressOperationResult 
+public class ProgressResponseDTO 
 {
     private final boolean success;
     private final String message;
     private final Progress progress;
     
-    public ProgressOperationResult(boolean success,String message,Progress progress)
+    public ProgressResponseDTO(boolean success,String message,Progress progress)
     {
         this.success=success;
         this.message=message;
