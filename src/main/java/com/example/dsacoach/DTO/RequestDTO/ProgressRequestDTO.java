@@ -1,9 +1,15 @@
 package com.example.dsacoach.DTO.RequestDTO;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class ProgressRequestDTO 
 {
+    @NotBlank
     private String username;
+
+    @NotBlank
     private String questionTitle;
+    
     private boolean solved;
     
     public ProgressRequestDTO()

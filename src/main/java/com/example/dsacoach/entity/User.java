@@ -19,17 +19,17 @@ public class User
 
     private String email;
 
-    //private int tuptup;
+    private String password;
 
     protected User()
     {
 
     }
-    public User(String username,String email)//,int t
+    public User(String username,String email, String password)
     {
         this.username=username;
         this.email=email;
-        //this.tuptup=t;
+        this.password=password;
     }
 
     public Integer getId()
@@ -45,6 +45,16 @@ public class User
     public String getEmail()
     {
         return email;
+    }
+
+    public String getPassword()
+    {
+        return password;
+    }
+
+    public void setPassword(String password)
+    {
+        this.password=password;
     }
 
     public void setUsername(String username)

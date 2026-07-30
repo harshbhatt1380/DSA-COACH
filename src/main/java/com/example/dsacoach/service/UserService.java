@@ -1,7 +1,10 @@
 package com.example.dsacoach.service;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.dsacoach.DTO.ResponseDTO.UserResponseDTO;
 import com.example.dsacoach.entity.User;
 import com.example.dsacoach.repository.UserRepository;
 
@@ -9,14 +12,125 @@ import com.example.dsacoach.repository.UserRepository;
 public class UserService 
 {
       private final UserRepository userRepository;
+
+      private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
       
       public UserService(UserRepository userRepository)
       {
         this.userRepository=userRepository;
       }
 
-      public User addUser(User user)
+      //REGISTER
+      public UserResponseDTO registerUser(String email,String username,String password)
       {
-        return userRepository.save(user);
-      } 
+        if(userRepository.findByEmail(email)==null)
+        {
+          if(userRepository.findByUsername(username)==null)
+          {
+            String hashedPassword = passwordEncoder.encode(password);
+            User user = new User(username,email,hashedPassword);
+            userRepository.save(user);
+            return new  UserResponseDTO(true, "User creation successful", user);
+          }
+          else
+          {
+            return new UserResponseDTO(false, "Could not create user since username is already taken", null);
+          }
+        }
+        else
+        {
+          return new UserResponseDTO(false, "Provided email already assosiated with an account thus cannot create new user", null);
+        }
+      }
+
+      //LOGIN
+      public UserResponseDTO login(String username,String email,String password)
+      {
+        User user = userRepository.findByEmailOrUsername(email, username);
+        if(user!=null)
+        {
+          if(passwordEncoder.matches(password,user.getPassword()))
+          {
+            return new UserResponseDTO(true, "User login successfull", user);
+          }
+          else
+          {
+            return new UserResponseDTO(false, "User login failed due to incorrect password", user);
+          }
+        }
+        else
+        {
+          return new UserResponseDTO(false, "No user found with given username or email", user);
+        }
+      }
+      
+      public UserResponseDTO findByUsername(String username)
+      {
+        User user = userRepository.findByUsername(username);
+        if(user!=null)
+        {
+          return new UserResponseDTO(true, "user entity found via username", user);
+        }
+        else
+        {
+          return new UserResponseDTO(false, "No user entity with given username found, thus search failed", user);
+        }
+      }
+
+      public UserResponseDTO findByEmail(String email)
+      {
+        User user = userRepository.findByEmail(email);
+        if(user!=null)
+        {
+          return new UserResponseDTO(true, "user entity found via email", user);
+        }
+        else
+        {
+          return new UserResponseDTO(false, "No user entity with given email found, thus search failed", user);
+        }
+      }
+
+      public UserResponseDTO updateUsername(String oldUsername,String newUsername)
+      {
+        User user = userRepository.findByUsername(oldUsername);
+        if(user==null)
+        {
+          return new UserResponseDTO(false, "No user with given username found thus cannot change username", user);
+        }
+        else
+        {
+          user.setUsername(newUsername);
+          userRepository.save(user);
+          return new UserResponseDTO(true, "username updated successfully", user);
+        }
+      }
+
+      public UserResponseDTO updateEmail(String oldEmail,String newEmail)
+      {
+        User user = userRepository.findByEmail(oldEmail);
+        if(user==null)
+        {
+          return new UserResponseDTO(false, "No user with given email found thus cannot change email", user);
+        }
+        else
+        {
+          user.setEmail(newEmail);
+          userRepository.save(user);
+          return new UserResponseDTO(true, "Email updated successfully", user);
+        }
+      }
+
+      public UserResponseDTO deleteUser(String email)
+      {
+        User user=userRepository.findByEmail(email);
+        if(user==null)
+        {
+          return new UserResponseDTO(false, "No user associated with given email thus deletion of account is invalid", user);
+        }
+        else
+        {
+          userRepository.delete(user);
+          return new UserResponseDTO(true, "user deletion successful", user);
+        }
+      }
 }
