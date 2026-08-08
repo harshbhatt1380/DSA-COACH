@@ -1,23 +1,24 @@
 package com.example.dsacoach.DTO.ResponseDTO;
 
-import com.example.dsacoach.entity.User;
+import com.example.dsacoach.enumFolder.Role;
 public class UserResponseDTO 
 {
     private final boolean success;
     private final String message;
-    User user; 
+    //User user;
+    private final String username;
+    private final String email;
+    private final Role role; 
     
-    public UserResponseDTO(boolean success,String message,User user)
+    public UserResponseDTO(boolean success,String message,String username,String email,Role role)
     {
         this.success=success;
         this.message=message;
-        this.user=user;
+        this.username=username;
+        this.email=email;
+        this.role=role;
     }
 
-    public User getUser()
-    {
-        return user;
-    }
 
     public String getMessage()
     {
@@ -27,5 +28,20 @@ public class UserResponseDTO
     public boolean isSuccess()
     {
         return success; 
+    }
+
+    public Role getRole()
+    {
+        return role;
+    }
+
+    public String getUsername()
+    {
+        return username;
+    }
+
+    public String getEmail()
+    {
+        return email;
     }
 }

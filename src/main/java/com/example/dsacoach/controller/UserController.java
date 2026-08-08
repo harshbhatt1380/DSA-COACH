@@ -46,7 +46,7 @@ public class UserController
         }
     }
 
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     public ResponseEntity<UserResponseDTO> login(@RequestBody UserRequestDTO user) 
     {
         UserResponseDTO entityUser = userService.login(user.getUsername(), user.getEmail(), user.getPassword());
@@ -58,11 +58,11 @@ public class UserController
         {
             return new ResponseEntity<>(entityUser, HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
     
 
 
-    @GetMapping("getByUsername")
+    @GetMapping("/getByUsername")
     public ResponseEntity<UserResponseDTO> getByUsername(@RequestBody UserRequestDTO user) 
     {
        UserResponseDTO searchedUser= userService.findByUsername(user.getUsername());
@@ -77,7 +77,7 @@ public class UserController
        }
     }
     
-    @GetMapping("getByEmail")
+    @GetMapping("/getByEmail")
     public ResponseEntity<UserResponseDTO> getByEmail(@RequestBody UserRequestDTO user) 
     {
        UserResponseDTO searchedUser= userService.findByEmail(user.getEmail());

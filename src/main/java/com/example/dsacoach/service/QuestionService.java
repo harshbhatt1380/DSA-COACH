@@ -3,6 +3,7 @@ package com.example.dsacoach.service;
 import org.springframework.stereotype.Service;
 
 import com.example.dsacoach.entity.Question;
+import com.example.dsacoach.enumFolder.Difficulty;
 import com.example.dsacoach.repository.QuestionRepository;
 
 import java.util.List;
@@ -16,6 +17,16 @@ public class QuestionService
     public QuestionService(QuestionRepository questionRepository)
     {
         this.questionRepository = questionRepository;
+    }
+
+    public List<Question> getQuestionByDifficulty(Difficulty difficulty)
+    {
+        return questionRepository.findByDifficulty(difficulty);
+    }
+
+    public Question getByTitle(String title)
+    {
+        return questionRepository.findByTitle(title);
     }
 
     public List<Question> getAllQuestions()

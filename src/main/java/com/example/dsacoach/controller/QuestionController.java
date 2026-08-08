@@ -1,5 +1,6 @@
 package com.example.dsacoach.controller;
 
+import com.example.dsacoach.repository.QuestionRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -12,18 +13,34 @@ import com.example.dsacoach.service.QuestionService;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
 @RequestMapping("/questions")
 public class QuestionController 
 {
+    private final QuestionRepository questionRepository;
     private final QuestionService questionService;
 
-    public QuestionController(QuestionService questionService)
+    public QuestionController(QuestionService questionService, QuestionRepository questionRepository)
     {
         this.questionService=questionService;
+        this.questionRepository = questionRepository;
     }
+
+    @GetMapping("/getByTitle")
+    public ResponseEntity<QuestionResponseDTO> getByTitle(@RequestParam String title) 
+    {
+        Question ques=questionRepository.findByTitle(title);
+        if(ques!=null)
+        {
+            return new QuestionResponseDTO();
+        }
+        
+    }
+    
 
     @GetMapping("/all")
     public List<Question> getAllQuestions() 

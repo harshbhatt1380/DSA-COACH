@@ -1,10 +1,15 @@
 package com.example.dsacoach.entity;
 
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import com.example.dsacoach.enumFolder.Role;
 
 @Entity
 @Table(name="users")
@@ -20,6 +25,10 @@ public class User
     private String email;
 
     private String password;
+
+    
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     protected User()
     {
@@ -65,5 +74,14 @@ public class User
     public void setEmail(String email)
     {
         this.email=email;
+    }
+
+    public void setRole(Role role)
+    {
+        this.role=role;
+    }
+    public Role getRole()
+    {
+        return role;
     }
 }
