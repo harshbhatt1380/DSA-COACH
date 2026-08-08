@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question,Integer> 
 {
+    Question findByIdAndTitle(Integer id,String title);
     Question findByTitle(String title);
     List<Question> findByDifficulty(Difficulty difficulty);    
 }
