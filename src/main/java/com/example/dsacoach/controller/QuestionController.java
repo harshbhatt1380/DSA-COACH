@@ -3,6 +3,7 @@ package com.example.dsacoach.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +33,23 @@ public class QuestionController
         this.questionService=questionService;
     }
 
+    @GetMapping("/getById")
+    public ResponseEntity<QuestionResponseDTO> findById(@RequestParam Integer id) 
+    {
+        Question ques=questionService.findById(id);
+        if(id!=null)
+        {
+            return new ResponseEntity<>(new QuestionResponseDTO(true, "Question with given id found", ques.getTitle(), ques.getDifficulty()), HttpStatus.OK);
+        }
+        else
+        {
+            return new ResponseEntity<>(new QuestionResponseDTO(false, "No question with given id present in database", null, null), HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+
     @PutMapping("/changeDifficulty")
-    public ResponseEntity<QuestionResponseDTO> changeTitle(@RequestParam Integer id,@RequestParam Difficulty difficulty) 
+    public ResponseEntity<QuestionResponseDTO> changeDifficulty(@RequestParam Integer id,@RequestParam Difficulty difficulty) 
     {
         Question ques = questionService.updateDifficulty(id, difficulty);
         if(ques!=null)
