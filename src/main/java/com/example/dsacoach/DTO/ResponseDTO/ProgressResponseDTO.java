@@ -1,18 +1,20 @@
 package com.example.dsacoach.DTO.ResponseDTO;
 
-import com.example.dsacoach.entity.Progress;
-
 public class ProgressResponseDTO 
 {
     private final boolean success;
     private final String message;
-    private final Progress progress;
+    private final String username;
+    private final String questionTitle;
+    private final boolean solved;
     
-    public ProgressResponseDTO(boolean success,String message,Progress progress)
+    public ProgressResponseDTO(boolean success,String message,String username,String questionTitle,boolean solved)
     {
         this.success=success;
         this.message=message;
-        this.progress=progress;
+        this.username=username;
+        this.questionTitle=questionTitle;
+        this.solved=solved;
     }
 
     public boolean getSuccess()
@@ -25,8 +27,18 @@ public class ProgressResponseDTO
         return message;
     }
 
-    public Progress getProgress()
+    public String getUsername()
     {
-        return progress;
+        return username;
+    }
+
+    public String getQuestionTitle()
+    {
+        return questionTitle;
+    }
+
+    public boolean isSolved()
+    {
+        return solved;
     }
 }
