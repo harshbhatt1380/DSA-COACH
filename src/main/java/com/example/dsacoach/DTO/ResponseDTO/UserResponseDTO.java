@@ -3,6 +3,7 @@ package com.example.dsacoach.DTO.ResponseDTO;
 import com.example.dsacoach.enumFolder.Role;
 public class UserResponseDTO 
 {
+    //private final Integer uid;
     private final boolean success;
     private final String message;
     //User user;
@@ -10,8 +11,9 @@ public class UserResponseDTO
     private final String email;
     private final Role role; 
     
-    public UserResponseDTO(boolean success,String message,String username,String email,Role role)
+    public UserResponseDTO(boolean success,String message,String username,String email,Role role)//Integer uid,
     {
+        //this.uid=uid;
         this.success=success;
         this.message=message;
         this.username=username;
@@ -44,4 +46,9 @@ public class UserResponseDTO
     {
         return email;
     }
+
+    /*public Integer getUid()
+    {
+        return uid;
+    }*/
 }

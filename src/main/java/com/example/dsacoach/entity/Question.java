@@ -1,6 +1,8 @@
 package com.example.dsacoach.entity;
 
 import com.example.dsacoach.enumFolder.Difficulty;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,6 +17,7 @@ public class Question
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
+    @Column(unique = true)
     private String title;
 
     @Enumerated(EnumType.STRING)

@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import com.example.dsacoach.DTO.RequestDTO.ProgressRequestDTO;
 import com.example.dsacoach.DTO.ResponseDTO.ProgressResponseDTO;
 import com.example.dsacoach.DTO.ResponseDTO.ProgressResponseList;
-import com.example.dsacoach.MyExceptions.UserNotFoundException;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,45 +36,22 @@ public class ProgressController
 
     @PostMapping("/add")
     public  ResponseEntity<ProgressResponseDTO> addProgress(@RequestBody ProgressRequestDTO progress) 
-    {   
+    {
         ProgressResponseDTO result=progressService.addProgress(progress.getUsername(),progress.getQuestionTitle(),progress.isSolved());
-        if(result.getSuccess())
-        {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-        else
-        {
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/questionProgress")
     public ResponseEntity<ProgressResponseDTO> getQuestionProgress(@RequestParam String username,@RequestParam Integer qid) 
     {
         ProgressResponseDTO result = progressService.getQuestionProgress(username, qid);
-        if(result.getSuccess())
-        {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-        else
-        {
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
     @GetMapping("/allquestionProgress")
     public ResponseEntity<ArrayList<ProgressResponseList>> getAllQuestionProgress(@RequestParam String username) 
     {
-        ArrayList<ProgressResponseList> result;
-        try 
-        {
-           result = progressService.getAllQuestionProgress(username);    
-        } 
-        catch (UserNotFoundException e) 
-        {
-            System.out.println("Caught Exception "+e.getMessage());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } 
+        ArrayList<ProgressResponseList> result = progressService.getAllQuestionProgress(username);
         return new ResponseEntity<>(result, HttpStatus.OK); 
     }  
 }

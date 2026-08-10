@@ -1,6 +1,7 @@
 package com.example.dsacoach.entity;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,9 +20,10 @@ public class User
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;  
 
-
+    @Column(unique = true)
     private String username;
 
+    @Column(unique = true)
     private String email;
 
     private String password;

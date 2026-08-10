@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.dsacoach.DTO.ResponseDTO.ProgressResponseDTO;
 import com.example.dsacoach.DTO.ResponseDTO.ProgressResponseList;
+import com.example.dsacoach.MyExceptions.QuestionNotFoundException;
 import com.example.dsacoach.MyExceptions.UserNotFoundException;
 import com.example.dsacoach.entity.Progress;
 import com.example.dsacoach.entity.Question;
@@ -36,12 +37,11 @@ public class ProgressService
         Question question = questionRepository.findByTitle(questionTitle);
         if(user==null)
         {
-            return new ProgressResponseDTO(false,"user not found",null,null,false);
+            throw new UserNotFoundException("user not found,thus cannot add progress");
         }
         else if(question==null)
         {
-            //Assuming we have a large database of problems
-           return new ProgressResponseDTO(false,"question not found",null,null,false);
+            throw new QuestionNotFoundException("question not found,thus cannot add progress");
         }
         else
         {
@@ -66,13 +66,14 @@ public class ProgressService
                 }
             }
         }
-    } 
+    }
+
     public ProgressResponseDTO getQuestionProgress(String username,Integer qid)
     {
         User user=userRepository.findByUsername(username);
         if(user==null)
         {
-            return new ProgressResponseDTO(false, "Invalid username, thus searching progress failed", null,null,false);
+            throw new UserNotFoundException("Invalid username, thus searching progress failed");
         }
         else
         {
@@ -80,9 +81,7 @@ public class ProgressService
             if(ques.isPresent())
             {
                 Question question=ques.get();
-
                 Progress progress=progressRepository.findByUserAndQuestion(user, question);
-
                 if(progress==null)
                 {
                     return new ProgressResponseDTO(true, "No progress record found for given user and question", user.getUsername(), question.getTitle(), false);
@@ -94,7 +93,7 @@ public class ProgressService
             }
             else
             {
-                return new ProgressResponseDTO(false, "Invalid question id , thus fetching progress failed", user.getUsername(), null, false);
+                throw new QuestionNotFoundException("Invalid question id, thus fetching progress details failed");
             }
         }
     }
@@ -103,7 +102,7 @@ public class ProgressService
         User user=userRepository.findByUsername(username);
         if(user==null)
         {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException("User not found thus cannot fetch progress details");
         }
         else
         {

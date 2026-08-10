@@ -36,14 +36,7 @@ public class UserController
     public ResponseEntity<UserResponseDTO> addUser(@RequestBody  User user) 
     {
         UserResponseDTO savedUser = userService.registerUser(user.getEmail(),user.getUsername(),user.getPassword());
-        if(savedUser.isSuccess())
-        {
-            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-        }
-        else
-        {
-            return new ResponseEntity<>(savedUser, HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
     /*@PostMapping("/login")
@@ -65,73 +58,35 @@ public class UserController
     @GetMapping("/getByUsername")
     public ResponseEntity<UserResponseDTO> getByUsername(@RequestBody UserRequestDTO user) 
     {
-       UserResponseDTO searchedUser= userService.findByUsername(user.getUsername());
-       if(searchedUser.isSuccess())
-       {
+        UserResponseDTO searchedUser= userService.findByUsername(user.getUsername());
         return new ResponseEntity<>(searchedUser, HttpStatus.OK);
-       }
-       else
-       {
-        return new ResponseEntity<>(searchedUser, HttpStatus.BAD_REQUEST);
-        
-       }
     }
     
     @GetMapping("/getByEmail")
     public ResponseEntity<UserResponseDTO> getByEmail(@RequestBody UserRequestDTO user) 
     {
-       UserResponseDTO searchedUser= userService.findByEmail(user.getEmail());
-       if(searchedUser.isSuccess())
-       {
+        UserResponseDTO searchedUser= userService.findByEmail(user.getEmail());
         return new ResponseEntity<>(searchedUser, HttpStatus.OK);
-       }
-       else
-       {
-        return new ResponseEntity<>(searchedUser, HttpStatus.BAD_REQUEST);
-       }
     }
 
     @PutMapping("/update/username")
     public ResponseEntity<UserResponseDTO> updateUsername(@RequestBody UserRequestDTO user,@RequestParam String newUsername) 
     {
         UserResponseDTO updatedUser=userService.updateUsername(user.getUsername(), newUsername);
-        if(updatedUser.isSuccess())
-        {
-            return new ResponseEntity<>(updatedUser,HttpStatus.OK);
-        }
-        else
-        {
-            return new ResponseEntity<>(updatedUser, HttpStatus.BAD_REQUEST);
-            
-        }
+        return new ResponseEntity<>(updatedUser,HttpStatus.OK);
     }
 
     @PutMapping("/update/email")
     public ResponseEntity<UserResponseDTO> updateEmail(@RequestBody UserRequestDTO user,@RequestParam String newEmail) 
     {
         UserResponseDTO updatedUser=userService.updateEmail(user.getEmail(), newEmail);
-        if(updatedUser.isSuccess())
-        {
-            return new ResponseEntity<>(updatedUser,HttpStatus.OK);
-        }
-        else
-        {
-            return new ResponseEntity<>(updatedUser, HttpStatus.BAD_REQUEST);
-            
-        }
+        return new ResponseEntity<>(updatedUser,HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteUser")
     public ResponseEntity<UserResponseDTO> deleteUser(@RequestBody UserRequestDTO user)
     {
         UserResponseDTO deletedUser=userService.deleteUser(user.getEmail());
-        if(deletedUser.isSuccess())
-        {
-            return new ResponseEntity<>(deletedUser, HttpStatus.OK);
-        }
-        else
-        {
-            return new ResponseEntity<>(deletedUser, HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(deletedUser, HttpStatus.OK);
     }
 }

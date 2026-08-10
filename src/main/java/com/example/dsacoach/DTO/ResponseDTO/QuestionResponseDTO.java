@@ -5,12 +5,14 @@ import com.example.dsacoach.enumFolder.Difficulty;
 public class QuestionResponseDTO 
 {
     private final boolean success; 
-    private final String message;  
+    private final String message; 
+    //private final Integer qid; 
     private final String title;
     private final Difficulty difficulty;
     
-    public QuestionResponseDTO(boolean success,String message,String title,Difficulty difficulty)
+    public QuestionResponseDTO(boolean success,String message,String title,Difficulty difficulty)//Integer qid;
     {
+        //this.qid=qid;
         this.title=title;
         this.difficulty=difficulty;
         this.message=message;

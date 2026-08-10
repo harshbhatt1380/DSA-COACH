@@ -6,6 +6,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.dsacoach.DTO.ResponseDTO.UserResponseDTO;
+import com.example.dsacoach.MyExceptions.EmailAlreadyTakenException;
+import com.example.dsacoach.MyExceptions.UserNotFoundException;
+import com.example.dsacoach.MyExceptions.UsernameAlreadyTakenException;
 import com.example.dsacoach.entity.User;
 import com.example.dsacoach.repository.UserRepository;
 import com.example.dsacoach.enumFolder.Role;
@@ -38,12 +41,14 @@ public class UserService
           }
           else
           {
-            return new UserResponseDTO(false, "Could not create user since username is already taken", null,null,null);
+            throw new UsernameAlreadyTakenException("Could not create user since username is already taken");
+            //return new UserResponseDTO(false, "Could not create user since username is already taken", null,null,null);
           }
         }
         else
         {
-          return new UserResponseDTO(false, "Provided email already assosiated with an account thus cannot create new user", null,null,null);
+          throw new EmailAlreadyTakenException("Provided email already assosiated with an account thus cannot create new user");
+          //return new UserResponseDTO(false, "Provided email already assosiated with an account thus cannot create new user", null,null,null);
         }
       }
 
@@ -77,7 +82,8 @@ public class UserService
         }
         else
         {
-          return new UserResponseDTO(false, "No user entity with given username found, thus search failed",null,null,null);
+          throw new UserNotFoundException("No user entity with given username found, thus search failed");
+          //return new UserResponseDTO(false, "No user entity with given username found, thus search failed",null,null,null);
         }
       }
 
@@ -90,7 +96,8 @@ public class UserService
         }
         else
         {
-          return new UserResponseDTO(false, "No user entity with given email found, thus search failed", null,null,null);
+          throw new UserNotFoundException("No user entity with given email found, thus search failed");
+          //return new UserResponseDTO(false, "No user entity with given email found, thus search failed", null,null,null);
         }
       }
 
@@ -99,13 +106,22 @@ public class UserService
         User user = userRepository.findByUsername(oldUsername);
         if(user==null)
         {
-          return new UserResponseDTO(false, "No user with given username found thus cannot change username", null,null,null);
+          throw new UserNotFoundException("No user with given username found thus cannot change username");
+          //return new UserResponseDTO(false, "No user with given username found thus cannot change username", null,null,null);
         }
         else
         {
-          user.setUsername(newUsername);
-          userRepository.save(user);
-          return new UserResponseDTO(true, "username updated successfully", user.getUsername(),user.getEmail(),user.getRole());
+          User checkUser=userRepository.findByUsername(newUsername);
+          if(checkUser!=null)
+          {
+            throw new UsernameAlreadyTakenException(newUsername+" username is already taken by another user thus action of changing username failed");
+          }
+          else
+          {
+            user.setUsername(newUsername);
+            userRepository.save(user);
+            return new UserResponseDTO(true, "username updated successfully", user.getUsername(),user.getEmail(),user.getRole());
+          }
         }
       }
 
@@ -114,13 +130,22 @@ public class UserService
         User user = userRepository.findByEmail(oldEmail);
         if(user==null)
         {
-          return new UserResponseDTO(false, "No user with given email found thus cannot change email", null,null,null);
+          throw new UserNotFoundException("No user with given email found thus cannot change email");
+          //return new UserResponseDTO(false, "No user with given email found thus cannot change email", null,null,null);
         }
         else
         {
-          user.setEmail(newEmail);
-          userRepository.save(user);
-          return new UserResponseDTO(true, "Email updated successfully", user.getUsername(),user.getEmail(),user.getRole());
+          User checkingUser=userRepository.findByEmail(newEmail);
+          if(checkingUser!=null)
+          {
+            throw new EmailAlreadyTakenException(newEmail+"already taken by another user,thus updation of user email failed");
+          }
+          else
+          {
+            user.setEmail(newEmail);
+            userRepository.save(user);
+            return new UserResponseDTO(true, "Email updated successfully", user.getUsername(),user.getEmail(),user.getRole());
+          }
         }
       }
 
@@ -129,7 +154,8 @@ public class UserService
         User user=userRepository.findByEmail(email);
         if(user==null)
         {
-          return new UserResponseDTO(false, "No user associated with given email thus deletion of account is invalid", null,null,null);
+          throw new UserNotFoundException("No user associated with given email thus deletion of account is invalid");
+          //return new UserResponseDTO(false, "No user associated with given email thus deletion of account is invalid", null,null,null);
         }
         else
         {

@@ -1,6 +1,5 @@
 package com.example.dsacoach.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.example.dsacoach.entity.Question;

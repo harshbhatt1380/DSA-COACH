@@ -4,9 +4,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(name="ProgressTab",columnNames = {"user_id","question_id"}))
 public class Progress 
 {
     @Id
@@ -14,9 +18,11 @@ public class Progress
     private Integer id;
 
     @ManyToOne
+    @JoinColumn(name="question_id")
     private Question question;
 
     @ManyToOne
+    @JoinColumn(name="user_id")
     private User user;
 
     private boolean solved;
