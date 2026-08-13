@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.dsacoach.DTO.RequestDTO.UserRequestDTO;
+import com.example.dsacoach.DTO.ResponseDTO.LoginResponseDTO;
 import com.example.dsacoach.DTO.ResponseDTO.UserResponseDTO;
 import com.example.dsacoach.entity.User;
 import com.example.dsacoach.service.UserService;
@@ -39,19 +40,12 @@ public class UserController
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
-    /*@PostMapping("/login")
-    public ResponseEntity<UserResponseDTO> login(@RequestBody UserRequestDTO user) 
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody UserRequestDTO user) 
     {
-        UserResponseDTO entityUser = userService.login(user.getUsername(), user.getEmail(), user.getPassword());
-        if(entityUser.isSuccess())
-        {
-            return new ResponseEntity<>(entityUser, HttpStatus.OK);
-        }
-        else
-        {
-            return new ResponseEntity<>(entityUser, HttpStatus.BAD_REQUEST);
-        }
-    }*/
+        String token = userService.login(user.getUsername(), user.getEmail(), user.getPassword());
+        return new ResponseEntity<>(new LoginResponseDTO(token), HttpStatus.OK);
+    }
     
 
 

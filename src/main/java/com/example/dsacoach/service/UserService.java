@@ -19,9 +19,12 @@ public class UserService
       private final UserRepository userRepository;
 
       private final PasswordEncoder passwordEncoder;
+
+      private final JwtService jwtService;
       
-      public UserService(UserRepository userRepository,PasswordEncoder passwordEncoder)
+      public UserService(UserRepository userRepository,PasswordEncoder passwordEncoder,JwtService jwtService)
       {
+        this.jwtService=jwtService;
         this.userRepository=userRepository;
         this.passwordEncoder=passwordEncoder;
       }
@@ -53,25 +56,19 @@ public class UserService
       }
 
       //LOGIN
-      /*public UserResponseDTO login(String username,String email,String password)
+      public String login(String username,String email,String password)
       {
         User user = userRepository.findByEmailOrUsername(email, username);
-        if(user!=null)
+        if(user==null)
         {
-          if(passwordEncoder.matches(password,user.getPassword()))
-          {
-            return new UserResponseDTO(true, "User login successfull", user);
-          }
-          else
-          {
-            return new UserResponseDTO(false, "User login failed due to incorrect password", user);
-          }
+          throw new UserNotFoundException("No user found with given username or email");
         }
-        else
-        {
-          return new UserResponseDTO(false, "No user found with given username or email", user);
-        }
-      }*/
+        if(!passwordEncoder.matches(password,user.getPassword()))
+          {
+            throw new RuntimeException("Incorrect password");
+          }
+          return jwtService.generateToken(user.getUsername());
+      }
       
       public UserResponseDTO findByUsername(String username)
       {
