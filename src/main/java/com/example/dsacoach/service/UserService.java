@@ -38,7 +38,7 @@ public class UserService
           {
             String hashedPassword = passwordEncoder.encode(password);
             User user = new User(username,email,hashedPassword);
-            user.setRole(Role.USER);
+            user.setRole(Role.ROLE_USER);
             userRepository.save(user);
             return new  UserResponseDTO(true, "User creation successful", user.getUsername(),user.getEmail(),user.getRole());
           }

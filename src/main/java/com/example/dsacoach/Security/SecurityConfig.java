@@ -7,21 +7,30 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig 
+{
+    private final JwtAuthFilter jwtAuthFilter;
 
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter)
+    {
+        this.jwtAuthFilter=jwtAuthFilter;
+        
+    }
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        // Default strength is 10 rounds; adjust higher if your system allows.
+    public PasswordEncoder passwordEncoder() 
+    {
         return new BCryptPasswordEncoder(); 
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
-        http.csrf(csrf->csrf.disable()).authorizeHttpRequests(auth->auth.requestMatchers("/users/**").permitAll().anyRequest().permitAll());
+        http.csrf(csrf->csrf.disable()).authorizeHttpRequests(auth->auth.requestMatchers("/users/register","/users/login").permitAll().requestMatchers("/questions/add","/questions/delete","/questions/changeDifficulty","/questions/changeTitle").hasRole("ADMIN").anyRequest().authenticated()).addFilterBefore(jwtAuthFilter,UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }
