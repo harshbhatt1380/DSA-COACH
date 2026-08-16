@@ -4,11 +4,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.dsacoach.DTO.RequestDTO.EmailRequestDTO;
 import com.example.dsacoach.DTO.RequestDTO.UserRequestDTO;
 import com.example.dsacoach.DTO.ResponseDTO.LoginResponseDTO;
 import com.example.dsacoach.DTO.ResponseDTO.UserResponseDTO;
-import com.example.dsacoach.entity.User;
 import com.example.dsacoach.service.UserService;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-
-
-
-
 
 @RestController
 @RequestMapping("/users")
@@ -34,14 +33,14 @@ public class UserController
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> addUser(@RequestBody  User user) 
+    public ResponseEntity<UserResponseDTO> addUser(@Valid @RequestBody  UserRequestDTO user) 
     {
         UserResponseDTO savedUser = userService.registerUser(user.getEmail(),user.getUsername(),user.getPassword());
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody UserRequestDTO user) 
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody UserRequestDTO user) 
     {
         String token = userService.login(user.getUsername(), user.getEmail(), user.getPassword());
         return new ResponseEntity<>(new LoginResponseDTO(token), HttpStatus.OK);
@@ -64,23 +63,23 @@ public class UserController
     }
 
     @PutMapping("/update/username")
-    public ResponseEntity<UserResponseDTO> updateUsername(@RequestBody UserRequestDTO user,@RequestParam String newUsername) 
+    public ResponseEntity<UserResponseDTO> updateUsername(@NotBlank @RequestParam String newUsername) 
     {
-        UserResponseDTO updatedUser=userService.updateUsername(user.getUsername(), newUsername);
+        UserResponseDTO updatedUser=userService.updateUsername(newUsername);
         return new ResponseEntity<>(updatedUser,HttpStatus.OK);
     }
 
     @PutMapping("/update/email")
-    public ResponseEntity<UserResponseDTO> updateEmail(@RequestBody UserRequestDTO user,@RequestParam String newEmail) 
+    public ResponseEntity<UserResponseDTO> updateEmail(@Valid @RequestBody EmailRequestDTO email) 
     {
-        UserResponseDTO updatedUser=userService.updateEmail(user.getEmail(), newEmail);
+        UserResponseDTO updatedUser=userService.updateEmail(email.getEmail());
         return new ResponseEntity<>(updatedUser,HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteUser")
-    public ResponseEntity<UserResponseDTO> deleteUser(@RequestBody UserRequestDTO user)
+    public ResponseEntity<UserResponseDTO> deleteUser()
     {
-        UserResponseDTO deletedUser=userService.deleteUser(user.getEmail());
+        UserResponseDTO deletedUser=userService.deleteUser();
         return new ResponseEntity<>(deletedUser, HttpStatus.OK);
     }
 }

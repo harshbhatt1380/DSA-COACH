@@ -105,8 +105,7 @@ public class ProgressService
             throw new UserNotFoundException("User not found thus cannot fetch progress details");
         }
         else
-        {
-            
+        { 
             ArrayList<ProgressResponseList> responseList = new ArrayList<>();
             List<Progress> progressList=progressRepository.findByUser(user);
             for(Progress item : progressList)

@@ -1,12 +1,14 @@
 package com.example.dsacoach.service;
 
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.dsacoach.DTO.ResponseDTO.UserResponseDTO;
 import com.example.dsacoach.MyExceptions.EmailAlreadyTakenException;
+import com.example.dsacoach.MyExceptions.InvalidCredentialsException;
 import com.example.dsacoach.MyExceptions.UserNotFoundException;
 import com.example.dsacoach.MyExceptions.UsernameAlreadyTakenException;
 import com.example.dsacoach.entity.User;
@@ -61,11 +63,11 @@ public class UserService
         User user = userRepository.findByEmailOrUsername(email, username);
         if(user==null)
         {
-          throw new UserNotFoundException("No user found with given username or email");
+          throw new UserNotFoundException("No user found with given username or email thus login failed");
         }
         if(!passwordEncoder.matches(password,user.getPassword()))
           {
-            throw new RuntimeException("Incorrect password");
+            throw new InvalidCredentialsException("Incorrect password thus login failed");
           }
           return jwtService.generateToken(user.getUsername());
       }
@@ -79,7 +81,7 @@ public class UserService
         }
         else
         {
-          throw new UserNotFoundException("No user entity with given username found, thus search failed");
+          throw new UserNotFoundException("No user entity with given username found, thus search via username failed");
           //return new UserResponseDTO(false, "No user entity with given username found, thus search failed",null,null,null);
         }
       }
@@ -93,18 +95,18 @@ public class UserService
         }
         else
         {
-          throw new UserNotFoundException("No user entity with given email found, thus search failed");
+          throw new UserNotFoundException("No user entity with given email found, thus search via Email failed");
           //return new UserResponseDTO(false, "No user entity with given email found, thus search failed", null,null,null);
         }
       }
 
-      public UserResponseDTO updateUsername(String oldUsername,String newUsername)
+      public UserResponseDTO updateUsername(String newUsername)
       {
+        String oldUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(oldUsername);
         if(user==null)
         {
           throw new UserNotFoundException("No user with given username found thus cannot change username");
-          //return new UserResponseDTO(false, "No user with given username found thus cannot change username", null,null,null);
         }
         else
         {
@@ -122,13 +124,13 @@ public class UserService
         }
       }
 
-      public UserResponseDTO updateEmail(String oldEmail,String newEmail)
+      public UserResponseDTO updateEmail(String newEmail)
       {
-        User user = userRepository.findByEmail(oldEmail);
+        String username =SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username);
         if(user==null)
         {
-          throw new UserNotFoundException("No user with given email found thus cannot change email");
-          //return new UserResponseDTO(false, "No user with given email found thus cannot change email", null,null,null);
+          throw new UserNotFoundException("No user found in database with jwt provided username thus cannot change email");
         }
         else
         {
@@ -146,9 +148,10 @@ public class UserService
         }
       }
 
-      public UserResponseDTO deleteUser(String email)
+      public UserResponseDTO deleteUser()
       {
-        User user=userRepository.findByEmail(email);
+        String username =SecurityContextHolder.getContext().getAuthentication().getName();
+        User user=userRepository.findByUsername(username);
         if(user==null)
         {
           throw new UserNotFoundException("No user associated with given email thus deletion of account is invalid");

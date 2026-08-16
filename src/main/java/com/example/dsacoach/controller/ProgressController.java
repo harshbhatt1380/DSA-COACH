@@ -4,6 +4,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.dsacoach.service.ProgressService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -11,6 +14,7 @@ import java.util.ArrayList;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.example.dsacoach.DTO.RequestDTO.ProgressRequestDTO;
 import com.example.dsacoach.DTO.ResponseDTO.ProgressResponseDTO;
@@ -35,22 +39,25 @@ public class ProgressController
     }
 
     @PostMapping("/add")
-    public  ResponseEntity<ProgressResponseDTO> addProgress(@RequestBody ProgressRequestDTO progress) 
+    public  ResponseEntity<ProgressResponseDTO> addProgress(@Valid @RequestBody ProgressRequestDTO progress) 
     {
-        ProgressResponseDTO result=progressService.addProgress(progress.getUsername(),progress.getQuestionTitle(),progress.isSolved());
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        ProgressResponseDTO result=progressService.addProgress(username,progress.getQuestionTitle(),progress.isSolved());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/questionProgress")
-    public ResponseEntity<ProgressResponseDTO> getQuestionProgress(@RequestParam String username,@RequestParam Integer qid) 
+    public ResponseEntity<ProgressResponseDTO> getQuestionProgress(@RequestParam Integer qid) 
     {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         ProgressResponseDTO result = progressService.getQuestionProgress(username, qid);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
-    @GetMapping("/allquestionProgress")
-    public ResponseEntity<ArrayList<ProgressResponseList>> getAllQuestionProgress(@RequestParam String username) 
+    @GetMapping("/allQuestionProgress")
+    public ResponseEntity<ArrayList<ProgressResponseList>> getAllQuestionProgress() 
     {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         ArrayList<ProgressResponseList> result = progressService.getAllQuestionProgress(username);
         return new ResponseEntity<>(result, HttpStatus.OK); 
     }  

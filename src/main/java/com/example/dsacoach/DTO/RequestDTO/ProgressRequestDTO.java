@@ -5,9 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 public class ProgressRequestDTO 
 {
     @NotBlank
-    private String username;
-
-    @NotBlank
     private String questionTitle;
     
     private boolean solved;
@@ -17,10 +14,6 @@ public class ProgressRequestDTO
 
     }
     
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
     
     public void setQuestionTitle(String questionTitle)
     {
@@ -30,11 +23,6 @@ public class ProgressRequestDTO
     public void setSolved(boolean solved)
     {
         this.solved = solved;
-    }
-
-    public String getUsername()
-    {
-        return username;
     }
 
     public String getQuestionTitle()
