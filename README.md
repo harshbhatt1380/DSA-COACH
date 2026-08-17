@@ -13,7 +13,219 @@ The project was built to practice and demonstrate backend development concepts i
 ## 🌐 Project Links
 
 * **GitHub Repository:** [DSA-COACH](https://github.com/harshbhatt1380/DSA-COACH)
-* **API Base URL:** `http://localhost:8080`
+* **Live API:** https://dsa-coach-7xc6.onrender.com
+* **Local API:** `http://localhost:8080`
+
+> 🚀 **The backend is deployed on Render and can be tested directly using Postman without running the project locally.**
+
+---
+
+# 🚀 Live API Demo
+
+The DSA Coach REST API is deployed and publicly accessible at:
+
+**Live Link:** https://dsa-coach-7xc6.onrender.com
+
+You can use the deployed API with Postman to register a user, authenticate, receive a JWT, and access protected endpoints.
+
+> **Note:** The application is hosted on Render's free tier, so the first request after a period of inactivity may take some time while the service wakes up.
+
+---
+
+## 🧪 Example: Using DSA Coach With Postman
+
+The following demonstrates a complete authentication and API workflow using the live deployment.
+
+### 1. Register a User
+
+**Request**
+
+```http
+POST https://dsa-coach-7xc6.onrender.com/users/register
+```
+
+Select **Body → raw → JSON** in Postman and send:
+
+```json
+{
+  "username": "demo_user",
+  "email": "demo@example.com",
+  "password": "password123"
+}
+```
+
+**Example Response**
+
+```json
+{
+  "success": true,
+  "message": "User creation successful",
+  "username": "demo_user",
+  "email": "demo@example.com",
+  "role": "ROLE_USER"
+}
+```
+
+---
+
+### 2. Login
+
+**Request**
+
+```http
+POST https://dsa-coach-7xc6.onrender.com/users/login
+```
+
+**Request Body**
+
+```json
+{
+  "username": "demo_user",
+  "email": "",
+  "password": "password123"
+}
+```
+
+The API returns a JWT:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9..."
+}
+```
+
+Copy the returned token.
+
+---
+
+### 3. Access a Protected Endpoint
+
+Now use the JWT to access an authenticated endpoint.
+
+**Request**
+
+```http
+GET https://dsa-coach-7xc6.onrender.com/questions/all
+```
+
+In Postman, open:
+
+**Authorization → Type → Bearer Token**
+
+Paste the JWT received from the login request.
+
+```text
+Bearer <your-jwt-token>
+```
+
+The API can now authenticate the request and return the available DSA questions.
+
+---
+
+### 4. Track Question Progress
+
+Once authenticated, a user can record whether they have solved a question.
+
+**Request**
+
+```http
+POST https://dsa-coach-7xc6.onrender.com/progress/add
+```
+
+**Authorization**
+
+```text
+Bearer <your-jwt-token>
+```
+
+**Request Body**
+
+```json
+{
+  "questionTitle": "Two Sum",
+  "solved": true
+}
+```
+
+Example response:
+
+```json
+{
+  "success": true,
+  "message": "Progress saved successfully"
+}
+```
+
+---
+
+### 5. Retrieve User Progress
+
+**Request**
+
+```http
+GET https://dsa-coach-7xc6.onrender.com/progress/allQuestionProgress
+```
+
+**Authorization**
+
+```text
+Bearer <your-jwt-token>
+```
+
+Example response:
+
+```json
+[
+  {
+    "questionTitle": "Two Sum",
+    "solved": true
+  },
+  {
+    "questionTitle": "Binary Search",
+    "solved": false
+  }
+]
+```
+
+---
+
+## 🔄 Complete Request Flow
+
+```text
+┌─────────────────────┐
+│      Register       │
+│  POST /users/...    │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│       Login         │
+│  POST /users/login  │
+└──────────┬──────────┘
+           │
+           ▼
+      ┌─────────┐
+      │   JWT   │
+      └────┬────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Authenticated API   │
+│       Requests      │
+└──────────┬──────────┘
+           │
+      ┌────┴───────────────┐
+      ▼                    ▼
+ Questions              Progress
+      │                    │
+      ▼                    ▼
+ Browse / Filter       Track Solved
+```
+
+This demonstrates the complete flow of the application:
+
+**Registration → Authentication → JWT → Protected API → Question Management → Progress Tracking**
+
 
 ---
 
