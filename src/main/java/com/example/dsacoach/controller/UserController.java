@@ -49,16 +49,9 @@ public class UserController
 
 
     @GetMapping("/getByUsername")
-    public ResponseEntity<UserResponseDTO> getByUsername(@RequestBody UserRequestDTO user) 
+    public ResponseEntity<UserResponseDTO> getByUsername(@NotBlank @RequestParam String user) 
     {
-        UserResponseDTO searchedUser= userService.findByUsername(user.getUsername());
-        return new ResponseEntity<>(searchedUser, HttpStatus.OK);
-    }
-    
-    @GetMapping("/getByEmail")
-    public ResponseEntity<UserResponseDTO> getByEmail(@RequestBody UserRequestDTO user) 
-    {
-        UserResponseDTO searchedUser= userService.findByEmail(user.getEmail());
+        UserResponseDTO searchedUser= userService.findByUsername(user);
         return new ResponseEntity<>(searchedUser, HttpStatus.OK);
     }
 
